@@ -1,0 +1,27 @@
+/**
+ * 
+ * Each thread of @class Player is used to simulate one of the players who are
+ * taking the ride.
+ *
+ *
+ * => Suggested Design:
+ * 
+ *  A player has four main attributes: ID, waiting time, on-board ag, and a
+ * ride-complete flag. Both flags, on-board and ride-complete, are initially false.
+ * 
+ *  A Player thread is initially put to sleep according to its waiting time.
+ * Upon waking up, the player calls the operator to queue for the next ride.
+ * 
+ */
+public class Player extends Thread {
+
+	private int id;
+	private int waitingTime;
+	private boolean onBoard;
+	private boolean rideComplete;
+
+	public Player() {
+		onBoard = false;
+		rideComplete = false;
+	}
+}
