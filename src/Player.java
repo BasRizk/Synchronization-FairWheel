@@ -6,7 +6,7 @@
  *
  * => Suggested Design:
  * 
- *  A player has four main attributes: ID, waiting time, on-board ag, and a
+ *  A player has four main attributes: ID, waiting time, on-board flag, and a
  * ride-complete flag. Both flags, on-board and ride-complete, are initially false.
  * 
  *  A Player thread is initially put to sleep according to its waiting time.
@@ -20,8 +20,15 @@ public class Player extends Thread {
 	private boolean onBoard;
 	private boolean rideComplete;
 
-	public Player() {
+	public Player(int id,int waitingTime) {
+		//id and waitingTime will be entered from the input file which could be done in the operator
+		this.id = id;  
+		this.waitingTime = waitingTime;
 		onBoard = false;
 		rideComplete = false;
 	}
+	public void run() {
+		//here where we will run the thread player.
+	}
+	
 }

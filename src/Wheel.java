@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * 
  * @class Wheel is used to simulate the Fair Wheel; it extends thread as it may
@@ -17,9 +19,27 @@
 public class Wheel extends Thread {
 	private int capacity;
 	private int numOfOnBoard;
+	private ArrayList<Player> onBoardPlayers;
 	private int maxWaitingTime;
 
 	public Wheel() {
-
+		capacity = 5; //the wheel has a capacity according to the description
+		numOfOnBoard = 0; //the wheel is empty when first created
+		onBoardPlayers = new ArrayList<Player>(); //Initialisation of the array of players 
+		//maxWaitingTime to be determined according to the input file
 	}
+	@Override
+	public void run() {
+		//here where we will run the thread
+	}
+	public void loadPlayers(Player addedPlayer) {
+		//TODO loading a player to the on-board players from the operator.
+	}
+	public void runRide() {
+		//TODO updating the state of the players on-board to ride-complete.
+	}
+	public void endRide() {
+		//TODO  empties the list of on-board players and puts the wheel  to sleep until the next ride is run.
+	}
+	
 }

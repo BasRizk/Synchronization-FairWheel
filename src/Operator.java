@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * 
  * A simulation of (Fair Wheel Ride) using java threads, implemented as a project under
@@ -23,8 +25,10 @@
  */
 public class Operator {
 	
-	Wheel fairWheel;
-	
+	public static void main(String[]args) {
+		Wheel fairWheel = new Wheel();
+		
+	}
 	public Operator() {
 		
 	}
