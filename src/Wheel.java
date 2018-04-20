@@ -4,17 +4,7 @@ import java.util.ArrayList;
  * 
  * @class Wheel is used to simulate the Fair Wheel; it extends thread as it may
  * sleep in case of no players are there to play.
- *
- *
- * => Suggested Design:
- *
- *  Wheel has four main attributes: capacity, count of currently on-board
- * players, list of currently on-board players and the maximum waiting time of
- * the wheel.  The wheel is put to sleep for max wait time upon start.
- *  A method load players() adds a player thread to the list of on-board players.
- *  A method run ride() updates the state of on-board threads to ride-complete.
- *  A method end ride() empties the list of on-board players and puts the wheel
- * to sleep until the next ride is run.
+ * 
  */
 public class Wheel extends Thread {
 	private int capacity;
@@ -22,24 +12,82 @@ public class Wheel extends Thread {
 	private ArrayList<Player> onBoardPlayers;
 	private int maxWaitingTime;
 
-	public Wheel() {
-		capacity = 5; //the wheel has a capacity according to the description
-		numOfOnBoard = 0; //the wheel is empty when first created
-		onBoardPlayers = new ArrayList<Player>(); //Initialisation of the array of players 
-		//maxWaitingTime to be determined according to the input file
+	public Wheel(int input_maxWaitingTime) {
+		this.capacity = 5; // According the description
+		this.numOfOnBoard = 0;
+		this.onBoardPlayers = new ArrayList<Player>();
+		this.maxWaitingTime = input_maxWaitingTime;
 	}
+
+	/*
+	 * The wheel is put to sleep for max wait time upon start.
+	 */
 	@Override
 	public void run() {
-		//here where we will run the thread
-	}
-	public void loadPlayers(Player addedPlayer) {
-		//TODO loading a player to the on-board players from the operator.
-	}
-	public void runRide() {
-		//TODO updating the state of the players on-board to ride-complete.
-	}
-	public void endRide() {
-		//TODO  empties the list of on-board players and puts the wheel  to sleep until the next ride is run.
+		try {
+			sleep(maxWaitingTime);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	
+	/**
+	 * A method loadPlayers() adds a player thread to the list of on-board players.
+	 * 
+	 * @param addedPlayer
+	 * @returns boolean as indicator if player has been loaded or not.
+	 */
+	public boolean loadPlayers(Player addedPlayer) {
+		
+		if(numOfOnBoard < capacity) {
+			this.onBoardPlayers.add(addedPlayer);
+			numOfOnBoard++;
+			return true;
+		}
+		
+		return false;
+		
+	}
+
+	/**
+	 * A method runRide() updates the state of on-board threads to ride-complete.
+	 */
+	public void runRide() {
+		// TODO updating the state of the players on-board to ride-complete.
+	}
+
+	/**
+	 * A method endRide() empties the list of on-board players and puts the wheel
+	 * to sleep until the next ride is run.
+	 * 
+	 * The wheel is put to sleep for max wait time upon start.
+	 */
+	public void endRide() {
+		// TODO review
+		this.onBoardPlayers.clear();
+		numOfOnBoard = 0;
+		try {
+			sleep(maxWaitingTime);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isFull() {
+		return numOfOnBoard == capacity;
+	}
+
+	public int getNumOfOnBoard() {
+		return numOfOnBoard;
+	}
+
+	public ArrayList<Player> getOnBoardPlayers() {
+		return onBoardPlayers;
+	}
+
+	public int getMaxWaitingTime() {
+		return maxWaitingTime;
+	}
+
 }
