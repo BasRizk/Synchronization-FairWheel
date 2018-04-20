@@ -73,7 +73,7 @@ public class Operator {
 			}
 			
 			fairWheel.runRide();
-			fairWheel.endRide();
+			fairWheel.endRide();	
 			
 			if(allPlayers.isEmpty()) {
 				break;
