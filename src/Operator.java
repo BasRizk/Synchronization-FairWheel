@@ -126,10 +126,17 @@ public class Operator {
 	}
 	
 	protected void addPlayerInQueue(Player queuedPlayer) {
-		playersQueue.add(queuedPlayer);
+		playersQueue.push(queuedPlayer);
 	}
 
 }
+
+/**
+ * Child class implements to act as the operator eyes, so it can look up,
+ * any player which calls to enter the queue, while the operator main thread
+ * is busy working on operating the rides and letting queued players enter the 
+ * fair wheel.
+ */
 
 class EyesOnPlayers extends Thread {
 	
