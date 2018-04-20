@@ -13,7 +13,7 @@ public class Wheel extends Thread {
 	private int maxWaitingTime;
 
 	public Wheel(int input_maxWaitingTime) {
-		this.capacity = 5; // According the description
+		this.capacity = 5; // According the descriptions
 		this.numOfOnBoard = 0;
 		this.onBoardPlayers = new ArrayList<Player>();
 		this.maxWaitingTime = input_maxWaitingTime;
