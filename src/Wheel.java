@@ -55,6 +55,10 @@ public class Wheel extends Thread {
 	 */
 	public void runRide() {
 		// TODO updating the state of the players on-board to ride-complete.
+		for (Player player : onBoardPlayers) {
+			player.setRideComplete(true);
+		}
+		
 	}
 
 	/**
@@ -65,6 +69,9 @@ public class Wheel extends Thread {
 	 */
 	public void endRide() {
 		// TODO review
+		for (Player player : onBoardPlayers) {
+			player.setOnBoard(false);
+		}
 		this.onBoardPlayers.clear();
 		numOfOnBoard = 0;
 		try {
