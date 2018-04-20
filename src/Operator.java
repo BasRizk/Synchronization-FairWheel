@@ -109,7 +109,7 @@ public class Operator {
 				String [] playerData = line.split(" ");				
 				int thread_id = Integer.parseInt(playerData[0]);
 				int waiting_time = Integer.parseInt(playerData[1]);
-				Player newPlayer = new Player(thread_id, waiting_time);
+				Player newPlayer = new Player(thread_id, waiting_time, this);
 				allPlayers.add(newPlayer);	
 			}
 			
@@ -127,6 +127,10 @@ public class Operator {
 	
 	protected void addPlayerInQueue(Player queuedPlayer) {
 		playersQueue.push(queuedPlayer);
+	}
+	
+	public EyesOnPlayers getOperatorEyes() {
+		return operatorEyes;
 	}
 
 }

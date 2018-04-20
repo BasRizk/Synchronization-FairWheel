@@ -10,12 +10,14 @@ public class Player extends Thread {
 	private int waitingTime;
 	private boolean onBoard;
 	private boolean rideComplete;
+	private EyesOnPlayers operatorEyes;
 
-	public Player(int id, int waitingTime) {
+	public Player(int id, int waitingTime, Operator operator) {
 		this.id = id;
 		this.waitingTime = waitingTime;
 		onBoard = false;
 		rideComplete = false;
+		operatorEyes = operator.getOperatorEyes();
 	}
 
 	/**
@@ -27,12 +29,16 @@ public class Player extends Thread {
 		try {
 			
 			sleep(this.waitingTime);
-			// TODO call operator to queue for next ride
+			callOperator(this);
 			
 			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static synchronized void callOperator(Player playerToQueue) {
+		playerToQueue.operatorEyes.addPlayerInQueue(playerToQueue);
 	}
 
 	public int getPlayerId() {
