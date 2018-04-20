@@ -23,10 +23,12 @@ public class Operator {
 	private LinkedList<Player> playersQueue;
 	private LinkedList<Player> allPlayers;
 	private int totalNumOfPlayers;
+	private EyesOnPlayers operatorEyes;
 	
 	public Operator(String gamePath) {
 		playersQueue = new LinkedList<Player>();
 		allPlayers = new LinkedList<Player>();
+		operatorEyes = new EyesOnPlayers(this);
 		readGame(gamePath);
 	}
 	
@@ -52,6 +54,7 @@ public class Operator {
 	 */
 	private void work() {
 		
+		operatorEyes.start();
 		fairWheel.start();
 		
 		while (true) {
@@ -84,13 +87,12 @@ public class Operator {
 	}
 	
 	/**
-	 * 
 	 * -> Initializes the Wheel
 	 * 
 	 * -> The operator creates, starts and keeps a list of player threads.
 	 * 
 	 * @param inputPath : path of the input file
-	 * @return boolean as indicator of operation done successsfully
+	 * @return boolean as indicator of operation done successfully
 	 */
 	private boolean readGame(String inputPath) {
 		try {
@@ -122,5 +124,25 @@ public class Operator {
 		
 		return false;
 	}
+	
+	protected void addPlayerInQueue(Player queuedPlayer) {
+		playersQueue.add(queuedPlayer);
+	}
 
+}
+
+class EyesOnPlayers extends Thread {
+	
+	Operator operator;
+	
+	public EyesOnPlayers(Operator operator) {
+		this.operator = operator;
+	}	
+	
+	public void addPlayerInQueue(Player playerToQueue) {
+		this.operator.addPlayerInQueue(playerToQueue);
+	}
+	
+	
+	
 }
