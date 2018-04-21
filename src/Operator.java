@@ -24,6 +24,7 @@ public class Operator {
 	private LinkedList<Player> allPlayers;
 	private int totalNumOfPlayers;
 	private EyesOnPlayers operatorEyes;
+	static String output = "";
 	
 	public Operator(String gamePath) {
 		playersQueue = new LinkedList<Player>();
@@ -33,9 +34,9 @@ public class Operator {
 	}
 	
 	public static void main(String[]args) {
-		
-		Operator operator = new Operator("input-1.txt");
+		Operator operator = new Operator("k://input-1.txt");
 		operator.work();
+		System.out.println(output);
 		
 	}
 	
@@ -56,7 +57,7 @@ public class Operator {
 		
 		operatorEyes.start();
 		fairWheel.start();
-		
+		output = output + "wheel start sleep\n";
 		while (true) {
 			
 			int timeToWait = 0;
@@ -67,10 +68,11 @@ public class Operator {
 				}
 				
 				if(!playersQueue.isEmpty()) {
+					output = output + "Passing player " + playersQueue.peek().getId() + " to the operator";
+					System.out.println(output);
 					fairWheel.loadPlayers(playersQueue.peek());
 					allPlayers.remove(playersQueue.pop());
 				}
-
 				timeToWait++; // TODO current time difference -> incremented for now
 				
 			}
@@ -106,6 +108,8 @@ public class Operator {
 			this.totalNumOfPlayers = Integer.parseInt(buffer.readLine());
 			
 			while((line = buffer.readLine()) != null) {
+				if(line.equals(""))
+					break;
 				String [] playerData = line.split(",");				
 				int thread_id = Integer.parseInt(playerData[0]);
 				int waiting_time = Integer.parseInt(playerData[1]);
