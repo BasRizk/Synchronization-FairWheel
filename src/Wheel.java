@@ -11,6 +11,7 @@ public class Wheel extends Thread {
 	private int numOfOnBoard;
 	private ArrayList<Player> onBoardPlayers;
 	private int maxWaitingTime;
+	private boolean rideOn;
 
 	public Wheel(int input_maxWaitingTime) {
 		this.capacity = 5; // According the descriptions
@@ -95,6 +96,10 @@ public class Wheel extends Thread {
 
 	public int getMaxWaitingTime() {
 		return maxWaitingTime;
+	}
+	
+	public boolean isRideOn() {
+		return rideOn;
 	}
 
 }
