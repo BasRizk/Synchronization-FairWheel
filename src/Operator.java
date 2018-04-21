@@ -34,7 +34,7 @@ public class Operator {
 	
 	public static void main(String[]args) {
 		
-		Operator operator = new Operator("input1");
+		Operator operator = new Operator("input-1.txt");
 		operator.work();
 		
 	}
