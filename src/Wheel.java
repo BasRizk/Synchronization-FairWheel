@@ -11,13 +11,14 @@ public class Wheel extends Thread {
 	private int numOfOnBoard;
 	private ArrayList<Player> onBoardPlayers;
 	private int maxWaitingTime;
-	private boolean rideOn;
+	private EyesOnPlayers operatorEyes;
 
-	public Wheel(int input_maxWaitingTime) {
+	public Wheel(int input_maxWaitingTime, Operator operator) {
 		this.capacity = 5; // According the descriptions
 		this.numOfOnBoard = 0;
 		this.onBoardPlayers = new ArrayList<Player>();
 		this.maxWaitingTime = input_maxWaitingTime;
+		this.operatorEyes = operator.getOperatorEyes();
 	}
 
 	/*
@@ -27,7 +28,9 @@ public class Wheel extends Thread {
 	public void run() {
 		try {
 			sleep(maxWaitingTime);
+			rideLoaded();
 		} catch (InterruptedException e) {
+			System.out.println("Interrupt once the ride is loaded at first ride.");
 			e.printStackTrace();
 		}
 	}
@@ -55,7 +58,6 @@ public class Wheel extends Thread {
 	 * A method runRide() updates the state of on-board threads to ride-complete.
 	 */
 	public void runRide() {
-		// TODO updating the state of the players on-board to ride-complete.
 		for (Player player : onBoardPlayers) {
 			player.setRideComplete(true);
 		}
@@ -69,7 +71,7 @@ public class Wheel extends Thread {
 	 * The wheel is put to sleep for max wait time upon start.
 	 */
 	public void endRide() {
-		// TODO review
+
 		for (Player player : onBoardPlayers) {
 			player.setOnBoard(false);
 		}
@@ -77,9 +79,16 @@ public class Wheel extends Thread {
 		numOfOnBoard = 0;
 		try {
 			sleep(maxWaitingTime);
+			rideLoaded();
 		} catch (InterruptedException e) {
+			System.out.println("Interrupt after ending the ride.");
 			e.printStackTrace();
 		}
+		
+	}
+	
+	private void rideLoaded() {
+		this.operatorEyes.wheelLoaded();
 	}
 	
 	public boolean isFull() {
@@ -96,10 +105,6 @@ public class Wheel extends Thread {
 
 	public int getMaxWaitingTime() {
 		return maxWaitingTime;
-	}
-	
-	public boolean isRideOn() {
-		return rideOn;
 	}
 
 }
