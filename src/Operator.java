@@ -26,6 +26,8 @@ public class Operator {
 	private int totalNumOfPlayers;
 	private EyesOnPlayers operatorEyes;
 
+	static String output = "";
+	
 	public Operator(String gamePath) {
 		playersQueue = new LinkedList<Player>();
 		allPlayers = new LinkedList<Player>();
@@ -35,11 +37,12 @@ public class Operator {
 		loadingRide = true;
 	}
 
-	public static void main(String[] args) {
-
+	
+	public static void main(String[]args) {
 		Operator operator = new Operator("input-1.txt");
 		operator.work();
-
+		System.out.println(output);
+		
 	}
 
 	/**
@@ -58,9 +61,12 @@ public class Operator {
 
 		operatorEyes.start();
 		fairWheel.start();
+
 		for(Player player : allPlayers) {
 			player.start();
 		}
+		
+		output = output + "wheel start sleep\n";
 
 		while (true) {
 
@@ -72,6 +78,9 @@ public class Operator {
 					}
 
 					if (!playersQueue.isEmpty()) {
+						output = output + "Passing player " + playersQueue.peek().getId() + " to the operator";
+						System.out.println("Passing player " + playersQueue.peek().getId() + " to the operator");
+		
 						fairWheel.loadPlayers(playersQueue.peek());
 						allPlayers.remove(playersQueue.pop());
 					}
@@ -80,6 +89,7 @@ public class Operator {
 
 				fairWheel.runRide();
 				fairWheel.endRide();
+
 			}
 			
 
@@ -109,16 +119,16 @@ public class Operator {
 			this.fairWheel = new Wheel(max_waiting_time, this);
 
 			this.totalNumOfPlayers = Integer.parseInt(buffer.readLine());
+			
+			while((line = buffer.readLine()) != null) {
+				if(line.equals(""))
+					break;
+				String [] playerData = line.split(",");				
+				int thread_id = Integer.parseInt(playerData[0]);
+				int waiting_time = Integer.parseInt(playerData[1]);
+				Player newPlayer = new Player(thread_id, waiting_time, this);
+				allPlayers.add(newPlayer);	
 
-			while ((line = buffer.readLine()) != null) {
-				String[] playerData = line.split(",");
-				if(playerData.length == 2) {
-					int thread_id = Integer.parseInt(playerData[0]);
-					int waiting_time = Integer.parseInt(playerData[1]);
-					Player newPlayer = new Player(thread_id, waiting_time, this);
-					allPlayers.add(newPlayer);
-				}
-				
 			}
 
 			buffer.close();

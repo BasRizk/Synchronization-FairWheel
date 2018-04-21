@@ -29,6 +29,7 @@ public class Player extends Thread {
 		try {
 			
 			sleep(this.waitingTime);
+			Operator.output = Operator.output + "player wakes up : " + id;
 			callOperator(this);
 			
 			
