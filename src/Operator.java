@@ -20,7 +20,7 @@ import java.util.LinkedList;
 public class Operator {
 
 	private Wheel fairWheel;
-	private boolean loadingRide;
+	private boolean wheelLoaded;
 	private LinkedList<Player> playersQueue;
 	private LinkedList<Player> allPlayers;
 	private int totalNumOfPlayers;
@@ -34,7 +34,7 @@ public class Operator {
 		totalNumOfPlayers = 0;
 		operatorEyes = new EyesOnPlayers(this);
 		readGame(gamePath);
-		loadingRide = true;
+		wheelLoaded = false;
 	}
 
 	
@@ -64,41 +64,62 @@ public class Operator {
 
 		for(Player player : allPlayers) {
 			player.start();
+			//System.out.println("Player " + player.getPlayerId() + ", waitingTime = " + player.getWaitingTime());
 		}
 		
-		output = output + "wheel start sleep\n";
+		output = output + "Wheel start sleep \n\n";
+		System.out.println(output);
 
 		while (true) {
 
-			if(loadingRide) {
-				while (loadingRide) {
+			wheelLoaded = false;
 
-					if (fairWheel.isFull()) {
-						break;
-					}
-
-					if (!playersQueue.isEmpty()) {
-						output = output + "Passing player " + playersQueue.peek().getId() + " to the operator";
-						System.out.println("Passing player " + playersQueue.peek().getId() + " to the operator");
-		
-						fairWheel.loadPlayers(playersQueue.peek());
-						allPlayers.remove(playersQueue.pop());
-					}
+			do {
+				fairWheel.endRide();
+				if (fairWheel.isFull()) {
+					break;
 					
 				}
+				
+				if (!playersQueue.isEmpty()) {
 
-				fairWheel.runRide();
-				fairWheel.endRide();
-
-			}
+					output = output + "Passing player " + playersQueue.getFirst().getPlayerId() + " to the operator \n\n";
+					System.out.println("Passing player " + playersQueue.getFirst().getPlayerId() + " to the operator\n");
+	
+					fairWheel.loadPlayers(playersQueue.getFirst());
+					allPlayers.remove(playersQueue.removeFirst());
+					
+				} else {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				
+			} while (!wheelLoaded);
 			
+			fairWheel.runRide();
 
 			if (allPlayers.isEmpty()) {
 				break;
 			}
-		}
+			
 
+			System.out.println("Ride Complete.\n");
+			
+		}
+		
 	}
+	
+	/*
+	try {
+		Thread.sleep(this.fairWheel.getMaxWaitingTime()/2);
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
+	*/
 
 	/**
 	 * -> Initializes the Wheel
@@ -121,13 +142,17 @@ public class Operator {
 			this.totalNumOfPlayers = Integer.parseInt(buffer.readLine());
 			
 			while((line = buffer.readLine()) != null) {
-				if(line.equals(""))
-					break;
-				String [] playerData = line.split(",");				
-				int thread_id = Integer.parseInt(playerData[0]);
-				int waiting_time = Integer.parseInt(playerData[1]);
-				Player newPlayer = new Player(thread_id, waiting_time, this);
-				allPlayers.add(newPlayer);	
+				
+				String [] playerData = line.split(",");	
+				
+				if(playerData.length == 2) {
+					int thread_id = Integer.parseInt(playerData[0]);
+					int waiting_time = Integer.parseInt(playerData[1]);
+					Player newPlayer = new Player(thread_id, waiting_time, this);
+					allPlayers.add(newPlayer);	
+
+				}
+				
 
 			}
 
@@ -144,11 +169,11 @@ public class Operator {
 	}
 
 	protected void addPlayerInQueue(Player queuedPlayer) {
-		this.playersQueue.push(queuedPlayer);
+		this.playersQueue.addLast(queuedPlayer);
 	}
 	
 	protected void wheelLoaded() {
-		this.loadingRide = false;
+		this.wheelLoaded = true;
 	}
 
 	public EyesOnPlayers getOperatorEyes() {
@@ -170,18 +195,6 @@ class EyesOnPlayers extends Thread {
 
 	Operator operator;
 	
-	@Override
-	public void run () {
-		while(true) {
-			try {
-				sleep(1);
-			} catch (InterruptedException e) {
-				System.out.println("Operator Eyes interrupted.");
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public EyesOnPlayers(Operator operator) {
 		this.operator = operator;
 	}

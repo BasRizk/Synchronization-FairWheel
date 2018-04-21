@@ -6,18 +6,18 @@
  */
 public class Player extends Thread {
 
-	private int id;
+	private int playerId;
 	private int waitingTime;
 	private boolean onBoard;
 	private boolean rideComplete;
 	private EyesOnPlayers operatorEyes;
 
-	public Player(int id, int waitingTime, Operator operator) {
-		this.id = id;
+	public Player(int playerId, int waitingTime, Operator operator) {
+		this.playerId = playerId;
 		this.waitingTime = waitingTime;
-		onBoard = false;
-		rideComplete = false;
-		operatorEyes = operator.getOperatorEyes();
+		this.onBoard = false;
+		this.rideComplete = false;
+		this.operatorEyes = operator.getOperatorEyes();
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class Player extends Thread {
 		try {
 			
 			sleep(this.waitingTime);
-			Operator.output = Operator.output + "player wakes up : " + id;
+			Operator.output = Operator.output + "player wakes up : " + playerId + "\n\n";
 			callOperator(this);
 			
 			
@@ -43,7 +43,7 @@ public class Player extends Thread {
 	}
 
 	public int getPlayerId() {
-		return id;
+		return playerId;
 	}
 
 	public int getWaitingTime() {

@@ -79,7 +79,9 @@ public class Wheel extends Thread {
 		numOfOnBoard = 0;
 		try {
 			sleep(maxWaitingTime);
+			//System.out.println("Wheel is saying ride is loaded");
 			rideLoaded();
+			//System.out.println("Loading signal sent successfully");
 		} catch (InterruptedException e) {
 			System.out.println("Interrupt after ending the ride.");
 			e.printStackTrace();
