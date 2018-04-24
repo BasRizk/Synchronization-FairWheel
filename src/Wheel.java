@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 
@@ -9,14 +11,14 @@ import java.util.ArrayList;
 public class Wheel implements Runnable {
 	private int capacity;
 	private int numOfOnBoard;
-	private ArrayList<Player> onBoardPlayers;
+	private LinkedList<Player> onBoardPlayers;
 	private int maxWaitingTime;
 	private EyesOnPlayers operatorEyes;
 
 	public Wheel(int input_maxWaitingTime, Operator operator) {
 		this.capacity = 5; // According the descriptions
 		this.numOfOnBoard = 0;
-		this.onBoardPlayers = new ArrayList<Player>();
+		this.onBoardPlayers = new LinkedList<Player>();
 		this.maxWaitingTime = input_maxWaitingTime;
 		this.operatorEyes = operator.getOperatorEyes();
 	}
@@ -38,8 +40,12 @@ public class Wheel implements Runnable {
 	*/
 	@Override
 	public void run() {
+		//onBoardPlayers = operatorEyes.getPlayersQueueForRide();
+		//System.out.println("num of on board before run = " + numOfOnBoard );
 		runRide();
 		endRide();
+		//System.out.println("num of on board after run " + numOfOnBoard );
+
 		return;
 	}
 	
@@ -52,6 +58,7 @@ public class Wheel implements Runnable {
 	public boolean loadPlayers(Player addedPlayer) {
 		
 		if(numOfOnBoard < capacity) {
+			//System.out.println("player added");
 			this.onBoardPlayers.add(addedPlayer);
 			numOfOnBoard++;
 			return true;
@@ -84,16 +91,22 @@ public class Wheel implements Runnable {
 		}
 		this.onBoardPlayers.clear();
 		numOfOnBoard = 0;
+		//System.out.println("players on ride = " + onBoardPlayers.size());
+		CompletableFuture.runAsync(this::waitForNextRide);
+
+		
+	}
+	
+	private void waitForNextRide() {
 		try {
 			Thread.sleep(maxWaitingTime);
-			System.out.println("Wheel is saying ride is loaded, and just woke up");
+			//System.out.println("Wheel is saying ride is loaded, and just woke up");
 			rideLoaded();
 			//System.out.println("Loading signal sent successfully");
 		} catch (InterruptedException e) {
 			System.out.println("Interrupt after ending the ride.");
 			e.printStackTrace();
 		}
-		
 	}
 	
 	private void rideLoaded() {
@@ -108,7 +121,7 @@ public class Wheel implements Runnable {
 		return numOfOnBoard;
 	}
 
-	public ArrayList<Player> getOnBoardPlayers() {
+	public LinkedList<Player> getOnBoardPlayers() {
 		return onBoardPlayers;
 	}
 

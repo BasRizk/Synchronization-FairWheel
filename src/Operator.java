@@ -1,9 +1,14 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 
@@ -24,27 +29,54 @@ public class Operator {
 	private boolean wheelLoaded;
 	private LinkedList<Player> playersQueue;
 	private LinkedList<Player> allPlayers;
+	private LinkedList<Player> playersQueueForRide;
+
 	private int totalNumOfPlayers;
 	private EyesOnPlayers operatorEyes;
 
-	static String output = "";
+	private String output = "";
+	private String inputPath;
 	
 	public Operator(String gamePath) {
+		inputPath = gamePath;
 		playersQueue = new LinkedList<Player>();
 		allPlayers = new LinkedList<Player>();
+		playersQueueForRide = new LinkedList<Player>();
 		totalNumOfPlayers = 0;
 		operatorEyes = new EyesOnPlayers(this);
-		readGame(gamePath);
+		readGame(inputPath);
 		wheelLoaded = false;
 	}
 
 	
 	public static void main(String[]args) {
-		Operator operator = new Operator("input-1.txt");
+		Operator operator = new Operator("input-2.txt");
 		operator.work();
-		System.out.println(output);
+		
+		try {
+			operator.writeOutput();
+		} catch (IOException e) {
+			System.out.println("Error Writing the output file.");
+			e.printStackTrace();
+		}
 		
 	}
+
+	private void writeOutput() throws IOException {
+		
+		String numberOfInput = "";
+		
+		if(inputPath.split("-").length >= 2) {
+			numberOfInput = inputPath.split("-")[1].split("\\.")[0];
+		}
+		
+		FileWriter fileWriter = new FileWriter("output-" + numberOfInput + ".txt");
+
+	    BufferedWriter writer = new BufferedWriter(fileWriter);
+	    writer.write(output);
+	    writer.close();
+	}
+
 
 	/**
 	 * -> The operator runs a ride in one of two cases: either the wheel is full
@@ -62,65 +94,108 @@ public class Operator {
 
 		operatorEyes.start();
 		threadWheel = new Thread(fairWheel);
-		threadWheel.start();
+		//threadWheel.start();
 
-		for(Player player : allPlayers) {
-			player.start();
-			//System.out.println("Player " + player.getPlayerId() + ", waitingTime = " + player.getWaitingTime());
-		}
+		boolean playersStarted = false;
 		
+		//CompletableFuture.runAsync(fairWheel::endRide);
+		//fairWheel.endRide();
 
 		while (true) {
 
 			wheelLoaded = false;
-			System.out.println("wheel start sleep, wheel loaded =" + wheelLoaded);
-			System.out.println(System.currentTimeMillis());
-			//fairWheel.endRide();
-			threadWheel.run();
-			System.out.println(System.currentTimeMillis());
-			System.out.println("just after wheel slept, wheel loaded =" + wheelLoaded);
-			LinkedList<Player> queueToEnterWheel = new LinkedList<Player>();
+			System.out.println("wheel start sleep");
+			addInOutput("wheel start sleep");
+			//System.out.println(System.currentTimeMillis());
+			fairWheel.endRide();
+			
+			if(!playersStarted) {
+				for(Player player : allPlayers) {
+					player.start();
+				}
+				playersStarted = true;
+			}
+			
+			
+			//threadWheel.run();
+			//System.out.println(System.currentTimeMillis());
+			//System.out.println("just after wheel slept, wheel loaded =" + wheelLoaded);
+			
+			//LinkedList<Player> queueToEnterWheef = new LinkedList<Player>();
+			
 			do {
+				/*
+				//System.out.println("fairWheel is full : " + fairWheel.isFull() + "  " + fairWheel.getNumOfOnBoard());
 				if (fairWheel.isFull()) {
 					System.out.println("Wheel is full, Let's go for a ride");
 					System.out.println("Threads in this ride are: ");
-					printPlayersOnRideIDs();
+					printPlayersOnRideIDs(); //TODO be modified after the wheel wakes up
 					break;					
 				}
 				
 				if (!playersQueue.isEmpty()) {
 
-					int currentPlayerID = playersQueue.getFirst().getPlayerId();
+					//int currentPlayerID = playersQueue.getFirst().getPlayerId();
 					
-					System.out.println("passing player: " + currentPlayerID + " to the operator");
+					//System.out.println("passing player: " + currentPlayerID + " to the operator");
 					
-					System.out.println("before entering in Wheel, wheelLoaded is " + wheelLoaded);
-					fairWheel.loadPlayers(playersQueue.getFirst());
-					System.out.println("after entering in Wheel, wheelLoaded is " + wheelLoaded);
+					//System.out.println("before entering in Wheel, wheelLoaded is " + wheelLoaded);
+					//fairWheel.loadPlayers(playersQueue.getFirst());
+					//System.out.println("after entering in Wheel, wheelLoaded is " + wheelLoaded);
 
-					allPlayers.remove(playersQueue.removeFirst());
-				
-					System.out.println("Player " + currentPlayerID + " on board, capacity: " + fairWheel.getNumOfOnBoard());
+					//System.out.println("All Players now are " + allPlayers.size());
+					//System.out.println("Player " + currentPlayerID + " on board, capacity: " + fairWheel.getNumOfOnBoard());
 					
 				} else {
 					try {
-						System.out.println("before main thread sleeps, wheelLoaded is " + wheelLoaded);
+						//System.out.println("before main thread sleeps, wheelLoaded is " + wheelLoaded);
 						Thread.sleep(10);
-						System.out.println("after main thread wakes up, wheelLoaded is " + wheelLoaded);
+						//System.out.println("after main thread wakes up, wheelLoaded is " + wheelLoaded);
 
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
+				*/
+				
+				if(playersQueue.size() >= 5) {
+					break;
+				}
+				
+				try {
+					Thread.sleep(1);
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				
 				
 			} while (!wheelLoaded);
 			
-			if(!fairWheel.isFull()) {
-				System.out.println("wheel end sleep \n");
+			while(!playersQueue.isEmpty()) {
+				Player p = playersQueue.getFirst();
+				if(p == null || !fairWheel.loadPlayers(p)) {
+					break;
+				}
+				playersQueue.remove(p);
+				allPlayers.remove(p);
+				System.out.println("Player " + p.getPlayerId() + " on board, capacity: " + fairWheel.getNumOfOnBoard());
+				addInOutput("Player " + p.getPlayerId() + " on board, capacity: " + fairWheel.getNumOfOnBoard());
 			}
 			
-			//fairWheel.runRide();
+			if(!fairWheel.isFull()) {
+				System.out.println("wheel end sleep \n");
+				addInOutput("wheel end sleep \n");
+
+			} else {
+				System.out.println("Wheel is full, Let's go for a ride");
+				System.out.println("Threads in this ride are: ");
+				addInOutput("Wheel is full, Let's go for a ride");
+				addInOutput("Threads in this ride are: ");
+				printPlayersOnRideIDs(); 
+			}
+			
+			fairWheel.runRide();
 
 			if (allPlayers.isEmpty()) {
 				break;
@@ -131,10 +206,14 @@ public class Operator {
 	}
 	
 	private void printPlayersOnRideIDs() {
+		String playersIDs = "";
 		for(Player p : fairWheel.getOnBoardPlayers()) {
 			System.out.print(p.getPlayerId() + ", ");
+			playersIDs+=p.getPlayerId() + ", ";
 		}
 		System.out.println("\n");
+		playersIDs+= "\n";
+		addInOutput(playersIDs);
 	}
 
 
@@ -194,18 +273,30 @@ public class Operator {
 	}
 
 	protected void addPlayerInQueue(Player queuedPlayer) {
-		this.playersQueue.addLast(queuedPlayer);
 		System.out.println("player wakes up: " + queuedPlayer.getPlayerId());
+		addInOutput("player wakes up: " + queuedPlayer.getPlayerId());
+		System.out.println("passing player: " + queuedPlayer.getPlayerId() + " to the operator");
+		addInOutput("passing player: " + queuedPlayer.getPlayerId() + " to the operator");
+		this.playersQueue.addLast(queuedPlayer);
+	}
+	
+	private void addInOutput(String string) {
+		output+= string + "\n";
 	}
 	
 	
 	protected void wheelLoaded() {
 		this.wheelLoaded = true;
-		System.out.println("Wheel loaded == " + this.wheelLoaded);
+		//System.out.println("Wheel loaded == " + this.wheelLoaded);
 	}
 
 	public EyesOnPlayers getOperatorEyes() {
 		return operatorEyes;
+	}
+
+
+	public LinkedList<Player> getPlayersQueueForRide() {
+		return playersQueueForRide;
 	}
 	
 	
@@ -235,5 +326,10 @@ class EyesOnPlayers extends Thread {
 		this.operator.wheelLoaded();
 	
 	}
+
+	public LinkedList<Player> getPlayersQueueForRide() {
+		return this.operator.getPlayersQueueForRide();
+	}
+	
 
 }

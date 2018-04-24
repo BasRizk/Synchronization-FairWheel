@@ -1,0 +1,40 @@
+wheel start sleep
+player wakes up: 1
+passing player: 1 to the operator
+player wakes up: 2
+passing player: 2 to the operator
+player wakes up: 3
+passing player: 3 to the operator
+player wakes up: 4
+passing player: 4 to the operator
+player wakes up: 5
+passing player: 5 to the operator
+Player 1 on board, capacity: 1
+Player 2 on board, capacity: 2
+Player 3 on board, capacity: 3
+Player 4 on board, capacity: 4
+Player 5 on board, capacity: 5
+Wheel is full, Let's go for a ride
+Threads in this ride are: 
+1, 2, 3, 4, 5, 
+
+wheel start sleep
+player wakes up: 6
+passing player: 6 to the operator
+player wakes up: 7
+passing player: 7 to the operator
+player wakes up: 8
+passing player: 8 to the operator
+player wakes up: 9
+passing player: 9 to the operator
+player wakes up: 10
+passing player: 10 to the operator
+Player 6 on board, capacity: 1
+Player 7 on board, capacity: 2
+Player 8 on board, capacity: 3
+Player 9 on board, capacity: 4
+Player 10 on board, capacity: 5
+Wheel is full, Let's go for a ride
+Threads in this ride are: 
+6, 7, 8, 9, 10, 
+
