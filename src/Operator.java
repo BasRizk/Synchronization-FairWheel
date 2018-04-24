@@ -5,10 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+
 
 /**
  * 
@@ -94,20 +92,14 @@ public class Operator {
 
 		operatorEyes.start();
 		threadWheel = new Thread(fairWheel);
-		//threadWheel.start();
 
 		boolean playersStarted = false;
-		
-		//CompletableFuture.runAsync(fairWheel::endRide);
-		//fairWheel.endRide();
 
 		while (true) {
 
 			wheelLoaded = false;
 			System.out.println("wheel start sleep");
 			addInOutput("wheel start sleep");
-			//System.out.println(System.currentTimeMillis());
-			//fairWheel.endRide();
 			threadWheel.run();
 			
 			if(!playersStarted) {
@@ -118,46 +110,9 @@ public class Operator {
 			}
 			
 			
-			//threadWheel.run();
-			//System.out.println(System.currentTimeMillis());
-			//System.out.println("just after wheel slept, wheel loaded =" + wheelLoaded);
-			
-			//LinkedList<Player> queueToEnterWheef = new LinkedList<Player>();
-			
+	
 			do {
-				/*
-				//System.out.println("fairWheel is full : " + fairWheel.isFull() + "  " + fairWheel.getNumOfOnBoard());
-				if (fairWheel.isFull()) {
-					System.out.println("Wheel is full, Let's go for a ride");
-					System.out.println("Threads in this ride are: ");
-					printPlayersOnRideIDs(); //TODO be modified after the wheel wakes up
-					break;					
-				}
-				
-				if (!playersQueue.isEmpty()) {
 
-					//int currentPlayerID = playersQueue.getFirst().getPlayerId();
-					
-					//System.out.println("passing player: " + currentPlayerID + " to the operator");
-					
-					//System.out.println("before entering in Wheel, wheelLoaded is " + wheelLoaded);
-					//fairWheel.loadPlayers(playersQueue.getFirst());
-					//System.out.println("after entering in Wheel, wheelLoaded is " + wheelLoaded);
-
-					//System.out.println("All Players now are " + allPlayers.size());
-					//System.out.println("Player " + currentPlayerID + " on board, capacity: " + fairWheel.getNumOfOnBoard());
-					
-				} else {
-					try {
-						//System.out.println("before main thread sleeps, wheelLoaded is " + wheelLoaded);
-						Thread.sleep(10);
-						//System.out.println("after main thread wakes up, wheelLoaded is " + wheelLoaded);
-
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				*/
 				
 				if(playersQueue.size() >= 5) {
 					threadWheel.interrupt();
@@ -197,7 +152,6 @@ public class Operator {
 				printPlayersOnRideIDs(); 
 			}
 			
-			//fairWheel.runRide();
 
 			if (allPlayers.isEmpty()) {
 				break;
@@ -218,14 +172,6 @@ public class Operator {
 		addInOutput(playersIDs);
 	}
 
-
-	/*
-	try {
-		Thread.sleep(this.fairWheel.getMaxWaitingTime()/2);
-	} catch (InterruptedException e) {
-		e.printStackTrace();
-	}
-	*/
 
 	/**
 	 * -> Initializes the Wheel
@@ -289,7 +235,6 @@ public class Operator {
 	
 	protected void wheelLoaded() {
 		this.wheelLoaded = true;
-		//System.out.println("Wheel loaded == " + this.wheelLoaded);
 	}
 
 	public EyesOnPlayers getOperatorEyes() {

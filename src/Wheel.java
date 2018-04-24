@@ -1,6 +1,4 @@
 import java.util.LinkedList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 
@@ -23,28 +21,11 @@ public class Wheel implements Runnable {
 		this.operatorEyes = operator.getOperatorEyes();
 	}
 
-	/*
-	 * The wheel is put to sleep for max wait time upon start.
-	 */
-	/*
+	
 	@Override
 	public void run() {
-		try {
-			sleep(maxWaitingTime);
-			rideLoaded();
-		} catch (InterruptedException e) {
-			System.out.println("Interrupt once the ride is loaded at first ride.");
-			e.printStackTrace();
-		}
-	}
-	*/
-	@Override
-	public void run() {
-		//onBoardPlayers = operatorEyes.getPlayersQueueForRide();
-		//System.out.println("num of on board before run = " + numOfOnBoard );
 		runRide();
 		endRide();
-		//System.out.println("num of on board after run " + numOfOnBoard );
 
 		return;
 	}
@@ -58,7 +39,6 @@ public class Wheel implements Runnable {
 	public boolean loadPlayers(Player addedPlayer) {
 		
 		if(numOfOnBoard < capacity) {
-			//System.out.println("player added");
 			this.onBoardPlayers.add(addedPlayer);
 			numOfOnBoard++;
 			return true;
@@ -91,8 +71,6 @@ public class Wheel implements Runnable {
 		}
 		this.onBoardPlayers.clear();
 		numOfOnBoard = 0;
-		//System.out.println("players on ride = " + onBoardPlayers.size());
-		//CompletableFuture.runAsync(this::waitForNextRide);
 		waitForNextRide();
 		
 	}
@@ -100,9 +78,7 @@ public class Wheel implements Runnable {
 	private void waitForNextRide() {
 		try {
 			Thread.sleep(maxWaitingTime);
-			//System.out.println("Wheel is saying ride is loaded, and just woke up");
 			rideLoaded();
-			//System.out.println("Loading signal sent successfully");
 		} catch (InterruptedException e) {
 			System.out.println("Interrupt after ending the ride.");
 			e.printStackTrace();
