@@ -23,7 +23,6 @@ import java.util.LinkedList;
 public class Operator {
 
 	private Wheel fairWheel;
-	private Thread threadWheel;
 	private boolean wheelLoaded;
 	private LinkedList<Player> playersQueue;
 	private LinkedList<Player> allPlayers;
@@ -91,7 +90,6 @@ public class Operator {
 	private void work() {
 
 		operatorEyes.start();
-		threadWheel = new Thread(fairWheel);
 
 		boolean playersStarted = false;
 
@@ -100,7 +98,7 @@ public class Operator {
 			wheelLoaded = false;
 			System.out.println("wheel start sleep");
 			addInOutput("wheel start sleep");
-			threadWheel.run();
+			fairWheel.run();
 			
 			if(!playersStarted) {
 				for(Player player : allPlayers) {
@@ -115,7 +113,7 @@ public class Operator {
 
 				
 				if(playersQueue.size() >= 5) {
-					threadWheel.interrupt();
+					fairWheel.interrupt();
 					break;
 				}
 				

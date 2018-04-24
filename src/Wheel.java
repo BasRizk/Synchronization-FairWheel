@@ -6,7 +6,7 @@ import java.util.LinkedList;
  * sleep in case of no players are there to play.
  * 
  */
-public class Wheel implements Runnable {
+public class Wheel extends Thread implements Runnable {
 	private int capacity;
 	private int numOfOnBoard;
 	private LinkedList<Player> onBoardPlayers;
