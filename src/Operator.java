@@ -107,7 +107,8 @@ public class Operator {
 			System.out.println("wheel start sleep");
 			addInOutput("wheel start sleep");
 			//System.out.println(System.currentTimeMillis());
-			fairWheel.endRide();
+			//fairWheel.endRide();
+			threadWheel.run();
 			
 			if(!playersStarted) {
 				for(Player player : allPlayers) {
@@ -159,6 +160,7 @@ public class Operator {
 				*/
 				
 				if(playersQueue.size() >= 5) {
+					threadWheel.interrupt();
 					break;
 				}
 				
@@ -195,7 +197,7 @@ public class Operator {
 				printPlayersOnRideIDs(); 
 			}
 			
-			fairWheel.runRide();
+			//fairWheel.runRide();
 
 			if (allPlayers.isEmpty()) {
 				break;

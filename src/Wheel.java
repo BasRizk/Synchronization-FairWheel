@@ -92,8 +92,8 @@ public class Wheel implements Runnable {
 		this.onBoardPlayers.clear();
 		numOfOnBoard = 0;
 		//System.out.println("players on ride = " + onBoardPlayers.size());
-		CompletableFuture.runAsync(this::waitForNextRide);
-
+		//CompletableFuture.runAsync(this::waitForNextRide);
+		waitForNextRide();
 		
 	}
 	
