@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * sleep in case of no players are there to play.
  * 
  */
-public class Wheel extends Thread {
+public class Wheel implements Runnable {
 	private int capacity;
 	private int numOfOnBoard;
 	private ArrayList<Player> onBoardPlayers;
@@ -24,6 +24,7 @@ public class Wheel extends Thread {
 	/*
 	 * The wheel is put to sleep for max wait time upon start.
 	 */
+	/*
 	@Override
 	public void run() {
 		try {
@@ -34,7 +35,13 @@ public class Wheel extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+	*/
+	@Override
+	public void run() {
+		runRide();
+		endRide();
+		return;
+	}
 	
 	/**
 	 * A method loadPlayers() adds a player thread to the list of on-board players.
@@ -78,8 +85,8 @@ public class Wheel extends Thread {
 		this.onBoardPlayers.clear();
 		numOfOnBoard = 0;
 		try {
-			sleep(maxWaitingTime);
-			//System.out.println("Wheel is saying ride is loaded");
+			Thread.sleep(maxWaitingTime);
+			System.out.println("Wheel is saying ride is loaded, and just woke up");
 			rideLoaded();
 			//System.out.println("Loading signal sent successfully");
 		} catch (InterruptedException e) {
@@ -108,5 +115,7 @@ public class Wheel extends Thread {
 	public int getMaxWaitingTime() {
 		return maxWaitingTime;
 	}
+
+
 
 }
